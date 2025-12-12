@@ -6,3 +6,5 @@ export async function init() {
     console.log(weatherCard) 
     homeView.render(weatherCard);
 }
+
+
