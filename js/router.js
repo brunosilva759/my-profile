@@ -27,12 +27,15 @@ function handlePopState({ state }) {
 
     setCurrentRoute(route)
     launchController(route.controller)
+
 }
+
+
 
 async function launchController(controllerName) {
     try {
         const module = await import(`./controller/${controllerName}.js`)
-        module.init();
+        console.log(module.default.init())
     } catch (error) {
         console.log(error)
     }

@@ -4,11 +4,12 @@ export default {
         controller: 'homeController'
     },
     films: {
-        path: '/city',
-        controller: 'weatherController'
+        path: '/info',
+        controller: 'homeController'
     },
     currentPath: {
         path: '',
         controller: ''
     }
 };
+

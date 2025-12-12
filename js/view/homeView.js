@@ -1,3 +1,5 @@
+import homeController from '../controller/homeController.js';
+
 function render(weatherCard) {
 
   let inputValue
@@ -14,6 +16,7 @@ function render(weatherCard) {
   button.addEventListener(`click`, async e => {
     e.preventDefault();
     console.log(inputValue);
+    homeController.searchCity(inputValue);
     
   })
 
@@ -25,6 +28,8 @@ function render(weatherCard) {
    
   });
 
+  
+
   card.innerHTML = '';
 
   const heading = document.createElement('h1');
@@ -32,7 +37,6 @@ function render(weatherCard) {
 
   const subheading = document.createElement('h3');
   subheading.textContent = `${weatherCard.location.name}, ${weatherCard.location.country}`;
-
   const icon = document.createElement('img');
   icon.src = `https:${weatherCard.current.condition.icon}`;
   icon.alt = weatherCard.current.condition.text;
