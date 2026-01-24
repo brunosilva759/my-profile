@@ -3,16 +3,16 @@ import weatherService from '../service/weatherService.js';
 
 const homeController = {
 
- async  init() {
+  async init() {
     const weatherCard = await weatherService.getWeatherByCity();
-    console.log(weatherCard) 
+    console.log(weatherCard);
     homeView.render(weatherCard);
-},
+  },
 
-async  searchCity(city) {
+  async searchCity(city) {
     const weatherCard = await weatherService.getWeatherByCity(city);
     homeView.render(weatherCard);
-}
+  }
+};
 
-}
-export default homeController; 
+export default homeController;

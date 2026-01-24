@@ -1,67 +1,60 @@
-import homeController from '../controller/homeController.js';
+import homeController from "../controller/homeController.js";
 
 function render(weatherCard) {
+  let inputValue;
 
-  let inputValue
+  const card = document.querySelector(".weatherCard");
+  const button = document.querySelector("#searchBtn");
+  const input = document.querySelector("#cityInput");
 
-  const card = document.querySelector('.weatherCard');
-  if (!card) {
-    console.error('Weather card element not found');
+  if (!weatherCard) {
+    card.innerHTML = "<p>City not found.</p>";
     return;
   }
 
-  const button = document.querySelector('#searchBtn');
-
-
-  button.addEventListener(`click`, async e => {
+  button.onclick = e => {
     e.preventDefault();
-    console.log(inputValue);
-    homeController.searchCity(inputValue);
-    
-  })
+    if (inputValue) homeController.searchCity(inputValue);
+  };
 
-
-  const input = document.querySelector('#cityInput');
-
-  input.addEventListener(`input`, async e => {
+  input.oninput = e => {
     inputValue = e.target.value;
-   
-  });
+  };
 
-  
+  card.innerHTML = `
+    <div class="city-name">${weatherCard.cityName}, ${weatherCard.countryName}</div>
+    <div class="temp">${weatherCard.temperature}°C</div>
+    <div class="condition">${convertWeatherCode(weatherCard.weatherCode)}</div>
+    <div class="details">
+      <div><strong>Wind:</strong> ${weatherCard.windspeed} km/h</div>
+      <div><strong>Code:</strong> ${weatherCard.weatherCode}</div>
+    </div>
+  `;
+}
 
-  card.innerHTML = '';
+function convertWeatherCode(code) {
+  const map = {
+    0: "Clear sky",
+    1: "Mainly clear",
+    2: "Partly cloudy",
+    3: "Overcast",
+    45: "Fog",
+    48: "Fog",
+    51: "Drizzle",
+    53: "Drizzle",
+    55: "Heavy drizzle",
+    61: "Rain",
+    63: "Rain",
+    65: "Heavy rain",
+    71: "Snowfall",
+    73: "Snow",
+    75: "Heavy snow",
+    95: "Thunderstorm",
+    96: "Thunderstorm with hail",
+    99: "Thunderstorm with hail"
+  };
 
-  const heading = document.createElement('h1');
-  heading.textContent = weatherCard.location.name;
-
-  const subheading = document.createElement('h3');
-  subheading.textContent = `${weatherCard.location.name}, ${weatherCard.location.country}`;
-  const icon = document.createElement('img');
-  icon.src = `https:${weatherCard.current.condition.icon}`;
-  icon.alt = weatherCard.current.condition.text;
-
-  const condition = document.createElement('p');
-  condition.innerHTML = `<strong>Condition:</strong> ${weatherCard.current.condition.text}`;
-
-  const temp = document.createElement('p');
-  temp.innerHTML = `<strong>Temperature:</strong> ${weatherCard.current.temp_c}°C`;
-
-  const humidity = document.createElement('p');
-  humidity.innerHTML = `<strong>Humidity:</strong> ${weatherCard.current.humidity}%`;
-
-  const wind = document.createElement('p');
-  wind.innerHTML = `<strong>Wind:</strong> ${weatherCard.current.wind_kph} km/h`;
-
-  card.appendChild(heading);
-  card.appendChild(subheading);
-  card.appendChild(icon);
-  card.appendChild(condition);
-  card.appendChild(temp);
-  card.appendChild(humidity);
-  card.appendChild(wind);
-
-
+  return map[code] || "Unknown weather";
 }
 
 export default { render };

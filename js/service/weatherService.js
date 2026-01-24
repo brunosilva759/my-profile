@@ -1,15 +1,38 @@
-const BASE_URL = 'http://api.weatherapi.com/v1/current.json?key=';
-const API_KEY =   "c34cb08c8af048b0914101937251212"
+const BASE_URL = "https://api.open-meteo.com/v1/forecast";
 
 const weatherService = {
+  async getWeatherByCity(city = "Lisbon") {
 
-   async getWeatherByCity(city = "Lisbon") {
-       const response = await fetch(`${BASE_URL}${API_KEY}&q=${city}`);
-       const data = await response.json();
-       console.log(data)
-       return data;
-   }
-}
+    // 1. Geocode city → lat/lon
+    const geoRes = await fetch(
+      `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1`
+    );
+    const geoData = await geoRes.json();
 
+    if (!geoData.results || geoData.results.length === 0) {
+      console.error("City not found");
+      return null;
+    }
 
-export default weatherService
+    const { name, country, latitude, longitude } = geoData.results[0];
+
+    // 2. Fetch weather
+    const weatherRes = await fetch(
+      `${BASE_URL}?latitude=${latitude}&longitude=${longitude}&current_weather=true`
+    );
+    const weatherData = await weatherRes.json();
+
+    const { temperature, windspeed, weathercode } = weatherData.current_weather;
+
+    // 3. Return clean object expected by the view
+    return {
+      cityName: name,
+      countryName: country,
+      temperature,
+      windspeed,
+      weatherCode: weathercode
+    };
+  }
+};
+
+export default weatherService;
